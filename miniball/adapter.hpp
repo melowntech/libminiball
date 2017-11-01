@@ -24,68 +24,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef miniball_miniball_hpp_included_
-#define miniball_miniball_hpp_included_
+#ifndef miniball_adapter_hpp_included_
+#define miniball_adapter_hpp_included_
 
 #include "math/geometry_core.hpp"
 
 #include "../externals/miniball/cpp/main/Seb.h"
 
-#include "./adapter.hpp"
-
 namespace miniball {
 
 template <typename T>
-struct MinimumBoundingSphere3_ {
-    math::Point3_<T> center;
-    T radius;
+class Point3_
+{
+private:
+    const math::Point3_<T> *p;
 
-    MinimumBoundingSphere3_() : radius() {}
+public:
+    Point3_(const math::Point3_<T> &p) : p(&p) {}
+
+    const T& operator[](std::size_t i) const { return (*p)(i); }
+
+    auto begin() -> decltype(p->begin()) const { return p->begin(); }
+    auto end() -> decltype(p->end()) const { return p->end(); }
+
 };
 
-template <typename T> MinimumBoundingSphere3_<T>
-minimumBoundingSphere(const std::vector<math::Point3_<T>> &points);
-
-template <typename T, typename Points> MinimumBoundingSphere3_<T>
-minimumBoundingSphere(const Points &points);
-
-// implementation
-
-namespace detail {
-
-template <typename T, typename SebType>
-MinimumBoundingSphere3_<T> msbFromSeb(SebType &seb)
+template <typename T>
+class Point3Accessor_
 {
-    MinimumBoundingSphere3_<T> mbs;
-    mbs.radius = seb.radius();
-    auto iseb(seb.center_begin());
-    mbs.center(0) = *iseb++;
-    mbs.center(1) = *iseb++;
-    mbs.center(2) = *iseb++;
-    return mbs;
-}
+public:
+    typedef std::vector<Point3_<T>> vector;
+    Point3Accessor_(const vector &v) : v_(v) {}
 
-} // namespace detail
+    Point3_<T> operator[](std::size_t i) { return Point3_<T>(v_[i]); }
 
-template <typename T> MinimumBoundingSphere3_<T>
-minimumBoundingSphere(const std::vector<math::Point3_<T>> &points)
-{
-    Seb::Smallest_enclosing_ball<T, Point3_<T>, Point3Accessor_<T>>
-        seb(3, Point3Accessor_<T>(points));
+    std::size_t size() const { return v_.size(); }
 
-    return detail::msbFromSeb<T>(seb);
-}
+private:
+    const vector &v_;
+};
 
-template <typename Points> MinimumBoundingSphere3_<typename Points::value_type>
-minimumBoundingSphere(const Points &points)
-{
-    typedef typename Points::value_type value_type;
-    Seb::Smallest_enclosing_ball<value_type, Point3_<value_type>, Points>
-        seb(3, points);
+} // namespace miniball::detail
 
-    return detail::msbFromSeb<value_type>(seb);
-}
-
-} // namespace miniball
-
-#endif // miniball_miniball_hpp_included_
+#endif // miniball_adapter_hpp_included_
