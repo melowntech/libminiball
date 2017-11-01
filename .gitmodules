@@ -1,0 +1,3 @@
+[submodule "externals/miniball"]
+	path = externals/miniball
+	url = https://github.com/hbf/miniball
