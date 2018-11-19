@@ -53,10 +53,10 @@ template <typename T>
 class Point3Accessor_
 {
 public:
-    typedef std::vector<Point3_<T>> vector;
+    typedef std::vector<math::Point3_<T>> vector;
     Point3Accessor_(const vector &v) : v_(v) {}
 
-    Point3_<T> operator[](std::size_t i) { return Point3_<T>(v_[i]); }
+    Point3_<T> operator[](std::size_t i) const { return Point3_<T>(v_[i]); }
 
     std::size_t size() const { return v_.size(); }
 
