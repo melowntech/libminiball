@@ -1,4 +1,4 @@
-#include "./miniball.hpp"
+#include "miniball.hpp"
 
 #include "../externals/miniball/cpp/main/Seb.h"
 

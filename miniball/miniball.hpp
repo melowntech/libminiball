@@ -31,7 +31,7 @@
 
 #include "../externals/miniball/cpp/main/Seb.h"
 
-#include "./adapter.hpp"
+#include "adapter.hpp"
 
 namespace miniball {
 
