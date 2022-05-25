@@ -29,7 +29,7 @@
 
 #include "math/geometry_core.hpp"
 
-#include "../externals/miniball/cpp/main/Seb.h"
+#include "miniball/Seb.h"
 
 #include "adapter.hpp"
 
